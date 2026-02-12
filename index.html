@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Valentine's Day</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -91,7 +92,7 @@
     <!-- Screen 4: No Response (Video) -->
     <div id="screen-no" class="screen">
         <div class="no-video-container">
-            <video id="no-video" autoplay loop playsinline>
+            <video id="no-video" autoplay muted loop playsinline preload="auto">
                 <source src="assets/no-video.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>

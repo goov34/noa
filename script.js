@@ -695,7 +695,24 @@ function showScreen(screenName) {
             if (screenName === 'no') {
                 const video = document.getElementById('no-video');
                 if (video) {
-                    video.play().catch(e => console.log('Video play failed:', e));
+                    // Reset video to start
+                    video.currentTime = 0;
+                    video.muted = false; // Unmute after user interaction
+                    
+                    // Force play with multiple attempts
+                    const playVideo = () => {
+                        video.play().catch(e => {
+                            console.log('Video play failed, retrying...', e);
+                            // Retry with muted if unmuted fails
+                            video.muted = true;
+                            video.play().catch(err => console.log('Video play failed:', err));
+                        });
+                    };
+                    
+                    playVideo();
+                    
+                    // Ensure video plays after a short delay as backup
+                    setTimeout(playVideo, 100);
                 }
             }
         }, 300);
