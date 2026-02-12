@@ -1,5 +1,7 @@
 // Game state
 let currentScreen = 'envelope';
+let screenHistory = ['envelope'];
+let historyIndex = 0;
 let puzzlePieces = [];
 let correctOrder = [];
 let draggedPiece = null;

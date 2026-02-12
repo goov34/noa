@@ -331,6 +331,9 @@ body {
     background-size: 200% 200%;
     animation: gradientShift 10s ease infinite;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .puzzle-reference {
@@ -360,7 +363,7 @@ body {
 
 .puzzle-container {
     width: 90%;
-    max-width: 600px;
+    max-width: 700px;
     padding: 25px 25px 30px 25px;
     background: rgba(255, 255, 255, 0.98);
     border-radius: 20px;
@@ -439,8 +442,8 @@ body {
 }
 
 .puzzle-grid.completed {
-    max-width: min(90vw, 500px);
-    width: 100%;
+    max-width: min(70vw, 400px);
+    width: auto;
     margin: 0 auto;
     position: relative;
 }
@@ -450,7 +453,8 @@ body {
     flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
-    min-height: 100vh !important;
+    min-height: auto !important;
+    padding: 50px 40px !important;
 }
 
 .puzzle-slot {
@@ -1093,6 +1097,14 @@ body {
         max-width: 100%;
     }
     
+    .puzzle-container:has(.puzzle-grid.completed) {
+        padding: 30px 15px !important;
+    }
+    
+    .puzzle-grid.completed {
+        max-width: min(75vw, 350px);
+    }
+    
     .puzzle-title {
         font-size: 24px;
         margin-bottom: 15px;
@@ -1279,6 +1291,14 @@ body {
     
     .puzzle-container {
         padding: 12px 8px;
+    }
+    
+    .puzzle-container:has(.puzzle-grid.completed) {
+        padding: 25px 10px !important;
+    }
+    
+    .puzzle-grid.completed {
+        max-width: min(70vw, 300px);
     }
     
     .puzzle-title {
