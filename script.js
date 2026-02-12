@@ -704,6 +704,22 @@ function showScreen(screenName) {
             if (screenName === 'proposal' || screenName === 'yes') {
                 setupProposalHearts();
             }
+            // Ensure proposal content is visible when showing valentine page
+            if (screenName === 'proposal') {
+                const proposalContainer = targetScreen.querySelector('.proposal-container');
+                const proposalContent = targetScreen.querySelector('.proposal-content');
+                if (proposalContainer) {
+                    proposalContainer.style.opacity = '1';
+                    proposalContainer.style.visibility = 'visible';
+                    proposalContainer.style.animation = 'none';
+                    proposalContainer.offsetHeight; // force reflow
+                    proposalContainer.style.animation = '';
+                }
+                if (proposalContent) {
+                    proposalContent.style.opacity = '1';
+                    proposalContent.style.visibility = 'visible';
+                }
+            }
             
             // If switching to no screen, ensure video plays
             if (screenName === 'no') {

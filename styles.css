@@ -59,6 +59,8 @@ body {
     display: flex;
     opacity: 1;
     pointer-events: auto;
+    z-index: 10;
+    position: relative;
 }
 
 /* Screen 1: Envelope */
@@ -325,12 +327,11 @@ body {
     }
 }
 
-/* Screen 2: Puzzle */
-#screen-puzzle {
+/* Screen 2: Puzzle - only use flex when active (don't override .screen display when inactive) */
+#screen-puzzle.screen.active {
     background: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #f8b500 100%);
     background-size: 200% 200%;
     animation: gradientShift 10s ease infinite;
-    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -570,10 +571,17 @@ body {
     }
 }
 
-/* Screen 3: Proposal */
+/* Screen 3: Proposal - don't override .screen display so it stays hidden until .active */
 #screen-proposal {
     position: relative;
     overflow: hidden;
+}
+
+/* Ensure proposal content is always visible when this screen is active (no animation dependency) */
+#screen-proposal.screen.active .proposal-container,
+#screen-proposal.screen.active .proposal-content {
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 .proposal-hearts-container {
@@ -624,13 +632,15 @@ body {
 
 .proposal-container {
     text-align: center;
-    animation: fadeInScale 0.8s ease-out;
+    animation: proposalScaleIn 0.5s ease-out forwards;
     position: relative;
     z-index: 2;
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
     padding: 40px 20px;
+    opacity: 1;
+    visibility: visible;
 }
 
 .proposal-content {
@@ -765,14 +775,14 @@ body {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.7);
     font-style: italic;
-    position: absolute;
-    top: 50px;
-    left: 20px;
+    position: relative;
+    margin-top: 15px;
     z-index: 10;
     opacity: 0.8;
     letter-spacing: 0.5px;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
     pointer-events: none;
+    text-align: center;
 }
 
 .btn {
@@ -885,6 +895,15 @@ body {
     to {
         transform: scale(1);
         opacity: 1;
+    }
+}
+
+@keyframes proposalScaleIn {
+    from {
+        transform: scale(0.92);
+    }
+    to {
+        transform: scale(1);
     }
 }
 
@@ -1251,8 +1270,7 @@ body {
     
     .ai-attribution {
         font-size: 10px;
-        top: 45px;
-        left: 15px;
+        margin-top: 12px;
     }
 }
 
@@ -1409,8 +1427,7 @@ body {
     
     .ai-attribution {
         font-size: 14px;
-        top: 600px;
-        left: 12px;
+        margin-top: 15px;
     }
     
     .btn {
