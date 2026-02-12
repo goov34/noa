@@ -5,13 +5,41 @@ let correctOrder = [];
 let draggedPiece = null;
 let envelopeOpened = false;
 let puzzleSetup = false;
+let bgMusic = null;
+let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
+    // Set viewport height for mobile
+    const setVH = () => {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    setVH();
+    window.addEventListener('resize', setVH);
+    window.addEventListener('orientationchange', setVH);
+    
     createHearts();
     setupEnvelope();
     setupPuzzle();
     setupButtons();
+    
+    // Play background music on app start
+    try {
+        bgMusic = new Audio('assets/background-music.mp3');
+        bgMusic.loop = true;
+        bgMusic.volume = 0.3;
+        // Try to play on first user interaction
+        const playMusic = () => {
+            if (bgMusic && bgMusic.paused) {
+                bgMusic.play().catch(e => console.log('Background music not available'));
+            }
+        };
+        document.addEventListener('click', playMusic, { once: true });
+        document.addEventListener('touchstart', playMusic, { once: true });
+    } catch (e) {
+        console.log('Background music not available');
+    }
     
     // Ensure initial active screen has pointer events
     const activeScreen = document.querySelector('.screen.active');
@@ -88,22 +116,6 @@ function setupProposalHearts() {
 function setupEnvelope() {
     const envelope = document.querySelector('.envelope-container');
     const envelopeFlap = document.querySelector('.envelope-flap');
-    
-    // Play background music if available
-    let bgMusic = null;
-    try {
-        bgMusic = new Audio('assets/background-music.mp3');
-        bgMusic.loop = true;
-        bgMusic.volume = 0.3;
-        // Try to play on user interaction
-        document.addEventListener('click', () => {
-            if (bgMusic && bgMusic.paused) {
-                bgMusic.play().catch(e => console.log('Background music not available'));
-            }
-        }, { once: true });
-    } catch (e) {
-        console.log('Background music not available');
-    }
     
     envelope.addEventListener('click', () => {
         // Prevent multiple clicks
@@ -645,14 +657,16 @@ function setupButtons() {
     });
     
     document.getElementById('btn-no').addEventListener('click', () => {
-        // Play sound (if available)
-        try {
-            const audio = new Audio('assets/sad-sound.mp3');
-            audio.play().catch(e => console.log('Audio play failed:', e));
-        } catch (e) {
-            console.log('Audio not available');
+        // Stop background music immediately for awkward silence
+        if (bgMusic) {
+            bgMusic.pause();
+            bgMusic.currentTime = 0;
         }
-        showScreen('no');
+        
+        // Wait 2 seconds before transitioning to create awkward silence
+        setTimeout(() => {
+            showScreen('no');
+        }, 2000);
     });
 }
 
@@ -695,22 +709,22 @@ function showScreen(screenName) {
                 if (video) {
                     // Reset video to start
                     video.currentTime = 0;
-                    video.muted = false; // Unmute after user interaction
                     
-                    // Force play with multiple attempts
-                    const playVideo = () => {
-                        video.play().catch(e => {
-                            console.log('Video play failed, retrying...', e);
-                            // Retry with muted if unmuted fails
-                            video.muted = true;
-                            video.play().catch(err => console.log('Video play failed:', err));
+                    // Try to play with sound first
+                    video.muted = false;
+                    video.play().catch(e => {
+                        console.log('Video play with sound failed, trying muted...', e);
+                        // If that fails, try muted (mobile browsers often require this)
+                        video.muted = true;
+                        video.play().catch(err => {
+                            console.log('Video play failed completely:', err);
+                            // Last resort: try again after a short delay
+                            setTimeout(() => {
+                                video.muted = true;
+                                video.play().catch(finalErr => console.log('Final video play attempt failed:', finalErr));
+                            }, 500);
                         });
-                    };
-                    
-                    playVideo();
-                    
-                    // Ensure video plays after a short delay as backup
-                    setTimeout(playVideo, 100);
+                    });
                 }
             }
         }, 300);
