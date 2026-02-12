@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Valentine's Day</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Screen 1: Envelope Opening -->
+    <div id="screen-envelope" class="screen active">
+        <div class="hearts-container"></div>
+        <div class="envelope-wrapper">
+            <div class="envelope-container">
+                <div class="envelope">
+                    <div class="envelope-front">
+                        <div class="envelope-flap">
+                            <div class="heart-icon">❤️</div>
+                        </div>
+                        <div class="envelope-body"></div>
+                    </div>
+                    <div class="envelope-back"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 2: Puzzle Game -->
+    <div id="screen-puzzle" class="screen">
+        <!-- <div class="puzzle-reference">
+            <img src="assets/cartoon-image.png" alt="Reference image" class="reference-image">
+        </div> -->
+        <div class="puzzle-container">
+            <h2 class="puzzle-title">Put the pieces together</h2>
+            <button id="btn-solve-auto" class="btn btn-solve-auto">Solve Puzzle</button>
+            <div class="puzzle-grid" id="puzzle-grid">
+                <div class="puzzle-loading">Loading puzzle...</div>
+            </div>
+            <div class="puzzle-tray" id="puzzle-tray"></div>
+        </div>
+    </div>
+
+    <!-- Screen 3: Proposal -->
+    <div id="screen-proposal" class="screen">
+        <div class="proposal-container">
+            <h1 class="proposal-name">Andiv Yafe</h1>
+            <h2 class="proposal-question">Will you be my valentine?</h2>
+            <div class="button-container">
+                <button id="btn-yes" class="btn btn-yes">Yes</button>
+                <button id="btn-no" class="btn btn-no">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen 4: Yes Response -->
+    <div id="screen-yes" class="screen">
+        <div class="response-container">
+            <h1 class="wohoo">Wohoo!</h1>
+            <div class="image-container">
+                <img id="yes-image" src="assets/cartoon-image.png" alt="Valentine's Day">
+            </div>
+            <button class="btn btn-reset" onclick="resetApp()">Reset</button>
+        </div>
+    </div>
+
+    <!-- Screen 5: No Response -->
+    <div id="screen-no" class="screen">
+        <div class="response-container">
+            <div class="no-gif-container">
+                <img id="no-gif" src="assets/sad.gif" alt="Sad" onerror="this.style.display='none'; this.parentElement.innerHTML='<div class=\'sad-animation\'><div class=\'sad-face\'><div class=\'sad-mouth\'></div></div></div>';">
+            </div>
+            <button class="btn btn-reset" onclick="resetApp()">Reset</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Puzzle</title>
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        #puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 4px;
+            width: 500px;
+            height: 500px;
+            background: #e0e0e0;
+            padding: 8px;
+            border-radius: 12px;
+        }
+        .puzzle-piece {
+            background: #fff;
+            border: 3px solid #ccc;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .puzzle-piece img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Puzzle Test</h1>
+    <div id="puzzle-grid"></div>
+    <div id="status"></div>
+    
+    <script>
+        const puzzleGrid = document.getElementById('puzzle-grid');
+        const status = document.getElementById('status');
+        
+        const fullImage = new Image();
+        
+        fullImage.onerror = function() {
+            status.innerHTML = '<p style="color: red;">Error loading image: assets/cartoon-image.png</p>';
+        };
+        
+        fullImage.onload = function() {
+            status.innerHTML = `<p style="color: green;">Image loaded: ${fullImage.width}x${fullImage.height}</p>`;
+            const cols = 3;
+            const rows = 3;
+            const pieceWidth = fullImage.width / cols;
+            const pieceHeight = fullImage.height / rows;
+            const imageUrl = fullImage.src;
+            
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < cols; col++) {
+                    const piece = document.createElement('div');
+                    piece.className = 'puzzle-piece';
+                    
+                    // Use CSS background-position instead of canvas to avoid CORS
+                    const bgX = -(col * pieceWidth);
+                    const bgY = -(row * pieceHeight);
+                    
+                    piece.style.backgroundImage = `url(${imageUrl})`;
+                    piece.style.backgroundPosition = `${bgX}px ${bgY}px`;
+                    piece.style.backgroundSize = `${fullImage.width}px ${fullImage.height}px`;
+                    piece.style.backgroundRepeat = 'no-repeat';
+                    
+                    puzzleGrid.appendChild(piece);
+                }
+            }
+            
+            status.innerHTML += `<p>Created ${rows * cols} puzzle pieces</p>`;
+        };
+        
+        fullImage.src = 'assets/cartoon-image.png';
+    </script>
+</body>
+</html>
