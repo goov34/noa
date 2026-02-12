@@ -12,6 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEnvelope();
     setupPuzzle();
     setupButtons();
+    
+    // Ensure initial active screen has pointer events
+    const activeScreen = document.querySelector('.screen.active');
+    if (activeScreen) {
+        activeScreen.style.pointerEvents = 'auto';
+    }
 });
 
 // Create falling hearts
@@ -26,6 +32,56 @@ function createHearts() {
         heart.style.animationDelay = Math.random() * 8 + 's';
         heartsContainer.appendChild(heart);
     }
+}
+
+// Create floating hearts for proposal screen and later screens
+function setupProposalHearts() {
+    // Clear any existing hearts first
+    const existingContainers = document.querySelectorAll('.proposal-hearts-container');
+    existingContainers.forEach(container => {
+        container.innerHTML = '';
+    });
+    
+    // Find the active screen's hearts container
+    const activeScreen = document.querySelector('.screen.active');
+    if (!activeScreen) return;
+    
+    const heartsContainer = activeScreen.querySelector('.proposal-hearts-container');
+    if (!heartsContainer) return;
+    
+    const heartEmojis = ['💕', '💖', '💗', '💓', '💝', '💘', '❤️', '💞'];
+    const heartCount = 15;
+    
+    function createProposalHeart() {
+        const heart = document.createElement('div');
+        heart.className = 'proposal-heart';
+        heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.animationDelay = Math.random() * 2 + 's';
+        heartsContainer.appendChild(heart);
+        
+        // Remove heart after animation completes
+        setTimeout(() => {
+            if (heart.parentNode) {
+                heart.parentNode.removeChild(heart);
+            }
+        }, 12000);
+    }
+    
+    // Create initial hearts
+    for (let i = 0; i < heartCount; i++) {
+        setTimeout(() => createProposalHeart(), i * 500);
+    }
+    
+    // Continuously create new hearts while screen is active
+    const intervalId = setInterval(() => {
+        const currentActiveScreen = document.querySelector('.screen.active');
+        if (currentActiveScreen && currentActiveScreen.querySelector('.proposal-hearts-container') === heartsContainer) {
+            createProposalHeart();
+        } else {
+            clearInterval(intervalId);
+        }
+    }, 2000);
 }
 
 // Setup envelope click
@@ -596,24 +652,8 @@ function setupButtons() {
         } catch (e) {
             console.log('Audio not available');
         }
-        showScreen('are-you-sure');
+        showScreen('no');
     });
-    
-    // Setup "Are You Sure" screen buttons
-    const areYouSureYesBtn = document.getElementById('btn-are-you-sure-yes');
-    const areYouSureNoBtn = document.getElementById('btn-are-you-sure-no');
-    
-    if (areYouSureYesBtn) {
-        areYouSureYesBtn.addEventListener('click', () => {
-            showScreen('yes');
-        });
-    }
-    
-    if (areYouSureNoBtn) {
-        areYouSureNoBtn.addEventListener('click', () => {
-            showScreen('oh-my-goodness');
-        });
-    }
 }
 
 // Show specific screen
@@ -623,6 +663,7 @@ function showScreen(screenName) {
     // Hide all screens with fade out
     document.querySelectorAll('.screen').forEach(screen => {
         if (screen.classList.contains('active')) {
+            screen.style.pointerEvents = 'none';
             screen.style.opacity = '0';
             setTimeout(() => {
                 screen.classList.remove('active');
@@ -636,10 +677,24 @@ function showScreen(screenName) {
         setTimeout(() => {
             targetScreen.classList.add('active');
             targetScreen.style.opacity = '1';
+            targetScreen.style.pointerEvents = 'auto';
             
             // If switching to puzzle screen, ensure puzzle is set up
             if (screenName === 'puzzle') {
                 setupPuzzle();
+            }
+            
+            // If switching to proposal screen or yes screen, ensure hearts are set up
+            if (screenName === 'proposal' || screenName === 'yes') {
+                setupProposalHearts();
+            }
+            
+            // If switching to no screen, ensure video plays
+            if (screenName === 'no') {
+                const video = document.getElementById('no-video');
+                if (video) {
+                    video.play().catch(e => console.log('Video play failed:', e));
+                }
             }
         }, 300);
     } else {

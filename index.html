@@ -44,50 +44,55 @@
 
     <!-- Screen 3: Proposal -->
     <div id="screen-proposal" class="screen">
+        <div class="proposal-hearts-container"></div>
+        <p class="ai-attribution">I did not support this graphic, AI made this</p>
         <div class="proposal-container">
-            <h1 class="proposal-name">Andiv Yafe</h1>
-            <h2 class="proposal-question">Will you be my valentine?</h2>
-            <div class="button-container">
-                <button id="btn-yes" class="btn btn-yes">Yes</button>
-                <button id="btn-no" class="btn btn-no">No</button>
+            <div class="proposal-content">
+                <!-- <div class="proposal-sparkles">
+                    <span class="sparkle">✨</span>
+                    <span class="sparkle">✨</span>
+                    <span class="sparkle">✨</span>
+                </div> -->
+                <h1 class="proposal-name">Andiv Yafe</h1>
+                <div class="proposal-heart-decoration">💕</div>
+                <h2 class="proposal-question">Will you be my valentine?</h2>
+                <div class="button-container">
+                    <button id="btn-yes" class="btn btn-yes">
+                        <span class="btn-text">Yes</span>
+                        <span class="btn-heart">💖</span>
+                    </button>
+                    <button id="btn-no" class="btn btn-no">No</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Screen 4: Yes Response -->
     <div id="screen-yes" class="screen">
-        <div class="response-container">
-            <h1 class="wohoo">Wohoo!</h1>
-            <div class="image-container">
-                <img id="yes-image" src="assets/cartoon-image.png" alt="Valentine's Day">
+        <div class="proposal-hearts-container"></div>
+        <div class="proposal-container">
+            <div class="proposal-content">
+                <div class="proposal-sparkles">
+                    <span class="sparkle">✨</span>
+                    <span class="sparkle">✨</span>
+                    <span class="sparkle">✨</span>
+                </div>
+                <h1 class="wohoo">Wohoo!</h1>
+                <div class="proposal-heart-decoration">💖</div>
+                <div class="image-container">
+                    <img id="yes-image" src="assets/cartoon-image.png" alt="Valentine's Day">
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Screen 5: Are You Sure (No Response) -->
-    <div id="screen-are-you-sure" class="screen">
-        <div class="response-container">
-            <div class="video-container">
-                <video id="no-video" autoplay loop muted playsinline>
-                    <source src="assets/no-video.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-            <div class="button-container">
-                <button id="btn-are-you-sure-yes" class="btn btn-yes">Yes</button>
-                <button id="btn-are-you-sure-no" class="btn btn-no">No</button>
-            </div>
-            <p class="are-you-sure-text">are you sure ??</p>
-        </div>
-    </div>
-
-    <!-- Screen 6: Oh My Goodness (After Are You Sure No) -->
-    <div id="screen-oh-my-goodness" class="screen">
-        <div class="response-container">
-            <h1 class="oh-my-goodness-text">Oh my goodness</h1>
-            <div class="image-container">
-                <img id="oh-my-goodness-image" src="assets/oh-my-goodness-image.png" alt="Oh my goodness">
-            </div>
+    <!-- Screen 4: No Response (Video) -->
+    <div id="screen-no" class="screen">
+        <div class="no-video-container">
+            <video id="no-video" autoplay loop playsinline>
+                <source src="assets/no-video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
         </div>
     </div>
 
