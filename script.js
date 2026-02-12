@@ -5,6 +5,7 @@ let correctOrder = [];
 let draggedPiece = null;
 let envelopeOpened = false;
 let puzzleSetup = false;
+let bgMusic = null;
 
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,6 +13,21 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEnvelope();
     setupPuzzle();
     setupButtons();
+    
+    // Play background music on app start
+    try {
+        bgMusic = new Audio('assets/background-music.mp3');
+        bgMusic.loop = true;
+        bgMusic.volume = 0.3;
+        // Try to play on first user interaction
+        document.addEventListener('click', () => {
+            if (bgMusic && bgMusic.paused) {
+                bgMusic.play().catch(e => console.log('Background music not available'));
+            }
+        }, { once: true });
+    } catch (e) {
+        console.log('Background music not available');
+    }
     
     // Ensure initial active screen has pointer events
     const activeScreen = document.querySelector('.screen.active');
@@ -88,22 +104,6 @@ function setupProposalHearts() {
 function setupEnvelope() {
     const envelope = document.querySelector('.envelope-container');
     const envelopeFlap = document.querySelector('.envelope-flap');
-    
-    // Play background music if available
-    let bgMusic = null;
-    try {
-        bgMusic = new Audio('assets/background-music.mp3');
-        bgMusic.loop = true;
-        bgMusic.volume = 0.3;
-        // Try to play on user interaction
-        document.addEventListener('click', () => {
-            if (bgMusic && bgMusic.paused) {
-                bgMusic.play().catch(e => console.log('Background music not available'));
-            }
-        }, { once: true });
-    } catch (e) {
-        console.log('Background music not available');
-    }
     
     envelope.addEventListener('click', () => {
         // Prevent multiple clicks
@@ -645,14 +645,16 @@ function setupButtons() {
     });
     
     document.getElementById('btn-no').addEventListener('click', () => {
-        // Play sound (if available)
-        try {
-            const audio = new Audio('assets/sad-sound.mp3');
-            audio.play().catch(e => console.log('Audio play failed:', e));
-        } catch (e) {
-            console.log('Audio not available');
+        // Stop background music immediately for awkward silence
+        if (bgMusic) {
+            bgMusic.pause();
+            bgMusic.currentTime = 0;
         }
-        showScreen('no');
+        
+        // Wait 2 seconds before transitioning to create awkward silence
+        setTimeout(() => {
+            showScreen('no');
+        }, 2000);
     });
 }
 
