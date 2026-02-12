@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     setupPuzzle();
     setupButtons();
     
+    // Preload video for smoother playback
+    const video = document.getElementById('no-video');
+    if (video) {
+        video.load();
+    }
+    
     // Play background music on app start
     try {
         bgMusic = new Audio('assets/background-music.mp3');
@@ -695,24 +701,26 @@ function showScreen(screenName) {
             if (screenName === 'no') {
                 const video = document.getElementById('no-video');
                 if (video) {
+                    // Load the video first
+                    video.load();
+                    
                     // Reset video to start
                     video.currentTime = 0;
-                    video.muted = false; // Unmute after user interaction
                     
-                    // Force play with multiple attempts
-                    const playVideo = () => {
-                        video.play().catch(e => {
-                            console.log('Video play failed, retrying...', e);
-                            // Retry with muted if unmuted fails
-                            video.muted = true;
-                            video.play().catch(err => console.log('Video play failed:', err));
+                    // Try to play with sound first (user has interacted)
+                    video.muted = false;
+                    video.play().then(() => {
+                        console.log('Video playing with sound');
+                    }).catch(e => {
+                        console.log('Video play with sound failed, trying muted...', e);
+                        // If that fails, play muted
+                        video.muted = true;
+                        video.play().then(() => {
+                            console.log('Video playing muted');
+                        }).catch(err => {
+                            console.log('Video play failed completely:', err);
                         });
-                    };
-                    
-                    playVideo();
-                    
-                    // Ensure video plays after a short delay as backup
-                    setTimeout(playVideo, 100);
+                    });
                 }
             }
         }, 300);
