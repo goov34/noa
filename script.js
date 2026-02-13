@@ -665,9 +665,41 @@ function setupButtons() {
             bgMusic.currentTime = 0;
         }
         
-        // Wait 2 seconds before transitioning to create awkward silence
+        // Show "no" screen immediately so video is in the document when we play (required for mobile autoplay with sound).
+        // Video must start in this same user gesture or mobile will block sound.
+        const noScreen = document.getElementById('screen-no');
+        const video = document.getElementById('no-video');
+        const overlay = document.getElementById('no-video-overlay');
+        if (!noScreen || !video) return;
+        
+        // Hide all other screens and show no screen right away (no setTimeout = same user gesture)
+        document.querySelectorAll('.screen').forEach((screen) => {
+            if (screen.classList.contains('active')) {
+                screen.style.pointerEvents = 'none';
+                screen.style.opacity = '0';
+                setTimeout(() => screen.classList.remove('active'), 300);
+            }
+        });
+        if (overlay) {
+            overlay.classList.remove('hidden');
+        }
+        noScreen.classList.add('active');
+        noScreen.style.opacity = '1';
+        noScreen.style.pointerEvents = 'auto';
+        currentScreen = 'no';
+        
+        // Start video with sound in this same click handler (mobile allows sound only from user gesture)
+        video.currentTime = 0;
+        video.muted = false;
+        video.play().catch((e) => {
+            // If with-sound is blocked, start muted so at least video plays; user can tap video to unmute on some devices
+            video.muted = true;
+            video.play().catch((err) => console.log('Video play failed:', err));
+        });
+        
+        // After 2 seconds of "awkward silence" (overlay covers video), reveal the video
         setTimeout(() => {
-            showScreen('no');
+            if (overlay) overlay.classList.add('hidden');
         }, 2000);
     });
 }
@@ -721,30 +753,7 @@ function showScreen(screenName) {
                 }
             }
             
-            // If switching to no screen, ensure video plays
-            if (screenName === 'no') {
-                const video = document.getElementById('no-video');
-                if (video) {
-                    // Reset video to start
-                    video.currentTime = 0;
-                    
-                    // Try to play with sound first
-                    video.muted = false;
-                    video.play().catch(e => {
-                        console.log('Video play with sound failed, trying muted...', e);
-                        // If that fails, try muted (mobile browsers often require this)
-                        video.muted = true;
-                        video.play().catch(err => {
-                            console.log('Video play failed completely:', err);
-                            // Last resort: try again after a short delay
-                            setTimeout(() => {
-                                video.muted = true;
-                                video.play().catch(finalErr => console.log('Final video play attempt failed:', finalErr));
-                            }, 500);
-                        });
-                    });
-                }
-            }
+            // No-screen video is started in the "No" button handler (same user gesture) for mobile sound support
         }, 300);
     } else {
         console.error('Screen not found:', screenName);
