@@ -61,6 +61,7 @@ body {
     pointer-events: auto;
     z-index: 10;
     position: relative;
+    flex-direction: column;
 }
 
 /* Screen 1: Envelope */
@@ -1064,15 +1065,38 @@ body {
 
 /* Responsive - iPhone 16 and mobile devices */
 @media (max-width: 768px) {
+    html {
+        height: 100%;
+        height: 100dvh;
+    }
+
     body {
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        min-height: 100%;
+        min-height: 100dvh;
     }
-    
+
+    /* Every screen: fill viewport and center content in the true middle (not top, not center-down) */
     .screen {
         padding: 20px 10px;
         min-height: 100vh;
-        height: auto;
+        min-height: 100dvh;
+        height: 100vh;
+        height: 100dvh;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .screen.active {
+        display: flex;
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100vh;
+        height: 100dvh;
+        align-items: center;
+        justify-content: center;
     }
     
     /* Envelope screen */
@@ -1252,22 +1276,38 @@ body {
         margin-top: 15px;
     }
     
+    #screen-puzzle.screen.active {
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100vh;
+        height: 100dvh;
+        align-items: center;
+        justify-content: center;
+    }
+
     #screen-no {
         padding: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100vh;
+        height: 100dvh;
     }
-    
+
     .no-video-container {
         width: 100%;
-        height: 100vh;
+        height: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
     }
-    
+
     .no-video-container video {
         width: 100%;
         height: 100%;
         max-height: 100vh;
+        max-height: 100dvh;
         object-fit: cover;
     }
-    
+
     .ai-attribution {
         font-size: 8px;
         margin-top: 12px;
@@ -1411,25 +1451,32 @@ body {
     
     #screen-no {
         padding: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+        height: 100vh;
+        height: 100dvh;
     }
-    
+
     .no-video-container {
         width: 100%;
-        height: 100vh;
+        height: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
     }
-    
+
     .no-video-container video {
         width: 100%;
         height: 100%;
         max-height: 100vh;
+        max-height: 100dvh;
         object-fit: cover;
     }
-    
+
     .ai-attribution {
         font-size: 12px;
         margin-top: 15px;
     }
-    
+
     .btn {
         font-size: 20px;
         padding: 16px 25px;
